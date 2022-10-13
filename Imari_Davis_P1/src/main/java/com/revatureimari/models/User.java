@@ -1,4 +1,4 @@
-package com.revature.models;
+package com.revatureimari.models;
 
 public class User {
     private int userId;

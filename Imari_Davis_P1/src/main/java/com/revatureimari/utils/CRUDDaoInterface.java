@@ -1,4 +1,4 @@
-package com.revature.utils;
+package com.revatureimari.utils;
 
 import java.util.List;
 
@@ -12,4 +12,6 @@ public interface CRUDDaoInterface<T> {
     T update(T t);
 
     boolean delete(T t);
+
+    boolean deleteById(int id);
 }

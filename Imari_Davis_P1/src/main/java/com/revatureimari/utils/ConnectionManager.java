@@ -1,4 +1,4 @@
-package com.revature.utils;
+package com.revatureimari.utils;
 
 import java.io.FileInputStream;
 import java.io.IOException;

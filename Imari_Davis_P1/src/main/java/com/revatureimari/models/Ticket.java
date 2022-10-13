@@ -1,32 +1,27 @@
-package com.revature.models;
+package com.revatureimari.models;
 
 public class Ticket {
     private int ticketId;
+    private double amount;
     private String description;
-    private double reimbursement;
     private TicketStatus ticketStatus;
-    private String response;
     private int employeeId;
 
     public Ticket() {
     }
 
-    public Ticket(int ticketId, String description, double reimbursement, TicketStatus ticketStatus,
-                  String response, int employeeId) {
+    public Ticket(int ticketId, double amount, String description, TicketStatus ticketStatus, int employeeId) {
         this.ticketId = ticketId;
+        this.amount = amount;
         this.description = description;
-        this.reimbursement = reimbursement;
         this.ticketStatus = ticketStatus;
-        this.response = response;
         this.employeeId = employeeId;
     }
 
-    public Ticket(String description, double reimbursement, TicketStatus ticketStatus, String response,
-                  int employeeId) {
+    public Ticket(double amount, String description, TicketStatus ticketStatus, int employeeId) {
+        this.amount = amount;
         this.description = description;
-        this.reimbursement = reimbursement;
         this.ticketStatus = ticketStatus;
-        this.response = response;
         this.employeeId = employeeId;
     }
 
@@ -38,6 +33,14 @@ public class Ticket {
         this.ticketId = ticketId;
     }
 
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -46,28 +49,12 @@ public class Ticket {
         this.description = description;
     }
 
-    public double getReimbursement() {
-        return reimbursement;
-    }
-
-    public void setReimbursement(double reimbursement) {
-        this.reimbursement = reimbursement;
-    }
-
     public TicketStatus getTicketStatus() {
         return ticketStatus;
     }
 
     public void setTicketStatus(TicketStatus ticketStatus) {
         this.ticketStatus = ticketStatus;
-    }
-
-    public String getResponse() {
-        return response;
-    }
-
-    public void setResponse(String response) {
-        this.response = response;
     }
 
     public int getEmployeeId() {
@@ -82,10 +69,9 @@ public class Ticket {
     public String toString() {
         return "Ticket{" +
                 "ticketId=" + ticketId +
+                ", amount=" + amount +
                 ", description='" + description + '\'' +
-                ", reimbursement=" + reimbursement +
                 ", ticketStatus=" + ticketStatus +
-                ", response='" + response + '\'' +
                 ", employeeId=" + employeeId +
                 '}';
     }
