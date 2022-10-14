@@ -2,7 +2,6 @@ package com.revatureimari.repos;
 
 import com.revatureimari.models.Ticket;
 import com.revatureimari.models.TicketStatus;
-import com.revatureimari.models.User;
 import com.revatureimari.utils.CRUDDaoInterface;
 import com.revatureimari.utils.ConnectionManager;
 

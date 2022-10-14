@@ -185,7 +185,7 @@ public class UserRepo implements CRUDDaoInterface<User> {
         try {
             String sql = "SELECT * FROM users WHERE user_name = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, user.getEmail());
+            preparedStatement.setString(1, user.getUserName());
 
             ResultSet resultSet = preparedStatement.executeQuery();
 

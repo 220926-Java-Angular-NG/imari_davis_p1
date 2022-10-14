@@ -1,6 +1,8 @@
 package com.revatureimari.controllers;
 
+import com.revatureimari.Driver;
 import com.revatureimari.models.Ticket;
+import com.revatureimari.models.UserStatus;
 import com.revatureimari.services.TicketService;
 import io.javalin.http.Handler;
 
@@ -18,14 +20,18 @@ public class TicketController {
     }
 
     public Handler createNewTicket = context -> {
-        Ticket ticket = context.bodyAsClass(Ticket.class);
-        int ticketId = ticketService.createTicket(ticket);
+        if (Driver.getCurrentUser() != null && Driver.getCurrentUser().getUserStatus() == UserStatus.Employee) {
+            Ticket ticket = context.bodyAsClass(Ticket.class);
+            int ticketId = ticketService.createTicket(ticket);
 
-        if (ticketId > 0) {
-            ticket.setTicketId(ticketId);
-            context.json(ticket).status(200);
+            if (ticketId > 0) {
+                ticket.setTicketId(ticketId);
+                context.json(ticket).status(200);
+            } else {
+                context.result("Could not create ticket").status(400);
+            }
         } else {
-            context.result("Could not create ticket").status(400);
+            context.result("Employee must be logged in to submit tickets").status(400);
         }
     };
 
@@ -40,10 +46,14 @@ public class TicketController {
             int employeeId = Integer.parseInt(param);
             List<Ticket> tickets = ticketService.getAllTicketsByUser(employeeId);
 
-            if (tickets != null) {
-                context.json(tickets);
+            if (Driver.getCurrentUser() != null && Driver.getCurrentUser().getUserStatus() == UserStatus.Employee) {
+                if (tickets != null) {
+                    context.json(tickets);
+                } else {
+                    context.result("Could not find ticket").status(400);
+                }
             } else {
-                context.result("Could not find ticket").status(400);
+                context.result("Employee must be logged in to view submitted tickets").status(400);
             }
 
         } catch (NumberFormatException numberFormatException) {
@@ -52,7 +62,11 @@ public class TicketController {
     };
 
     public Handler getAllPendingTickets = context -> {
-        context.json(ticketService.getAllPendingTickets());
+        if (Driver.getCurrentUser() != null && Driver.getCurrentUser().getUserStatus() == UserStatus.Manager) {
+            context.json(ticketService.getAllPendingTickets());
+        } else {
+            context.result("Invalid user. Pending tickets can only be modified by finance manager").status(400);
+        }
     };
 
     public Handler getTicketById = context -> {
@@ -77,10 +91,14 @@ public class TicketController {
         Ticket ticket = context.bodyAsClass(Ticket.class);
         ticket = ticketService.updateTicket(ticket);
 
-        if (ticket != null) {
-            context.json(ticket).status(202);
+        if (Driver.getCurrentUser() != null && Driver.getCurrentUser().getUserStatus() == UserStatus.Manager) {
+            if (ticket != null) {
+                context.json(ticket).status(202);
+            } else {
+                context.result("Could not update ticket").status(400);
+            }
         } else {
-            context.result("Could not update ticket").status(400);
+            context.result("Invalid user. Pending tickets can only be modified by finance manager").status(400);
         }
     };
 
