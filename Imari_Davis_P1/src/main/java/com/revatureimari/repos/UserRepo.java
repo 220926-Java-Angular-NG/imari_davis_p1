@@ -69,6 +69,7 @@ public class UserRepo implements CRUDDaoInterface<User> {
                 user.setUserName(resultSet.getString("user_name"));
                 user.setPassword(resultSet.getString("pass_word"));
                 user.setUserStatus(UserStatus.valueOf(resultSet.getString("user_status")));
+                users.add(user);
             }
 
             return users;

@@ -39,4 +39,12 @@ public class UserService {
     public boolean deleteUserById(int userId) {
         return userRepo.deleteById(userId);
     }
+
+    public User loginUser(User user) {
+        return userRepo.loginUser(user);
+    }
+
+    public User loginUserByEmail(User user) {
+        return userRepo.loginUserByEmail(user);
+    }
 }

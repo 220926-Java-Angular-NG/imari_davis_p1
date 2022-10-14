@@ -10,18 +10,18 @@ public class Ticket {
     public Ticket() {
     }
 
-    public Ticket(int ticketId, double amount, String description, TicketStatus ticketStatus, int employeeId) {
+    public Ticket(int ticketId, double amount, String description, int employeeId) {
         this.ticketId = ticketId;
         this.amount = amount;
         this.description = description;
-        this.ticketStatus = ticketStatus;
+        this.ticketStatus = TicketStatus.Pending;
         this.employeeId = employeeId;
     }
 
-    public Ticket(double amount, String description, TicketStatus ticketStatus, int employeeId) {
+    public Ticket(double amount, String description, int employeeId) {
         this.amount = amount;
         this.description = description;
-        this.ticketStatus = ticketStatus;
+        this.ticketStatus = TicketStatus.Pending;
         this.employeeId = employeeId;
     }
 

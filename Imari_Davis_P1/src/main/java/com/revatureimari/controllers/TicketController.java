@@ -4,8 +4,10 @@ import com.revatureimari.models.Ticket;
 import com.revatureimari.services.TicketService;
 import io.javalin.http.Handler;
 
+import java.util.List;
+
 public class TicketController {
-    TicketService ticketService;
+    private TicketService ticketService;
 
     public TicketController() {
         ticketService = new TicketService();
@@ -31,8 +33,30 @@ public class TicketController {
         context.json(ticketService.getAllTickets());
     };
 
+    public Handler getAllTicketsByUser = context -> {
+        String param = context.pathParam("employeeId");
+
+        try {
+            int employeeId = Integer.parseInt(param);
+            List<Ticket> tickets = ticketService.getAllTicketsByUser(employeeId);
+
+            if (tickets != null) {
+                context.json(tickets);
+            } else {
+                context.result("Could not find ticket").status(400);
+            }
+
+        } catch (NumberFormatException numberFormatException) {
+            System.out.println(numberFormatException.getMessage());
+        }
+    };
+
+    public Handler getAllPendingTickets = context -> {
+        context.json(ticketService.getAllPendingTickets());
+    };
+
     public Handler getTicketById = context -> {
-        String param = context.pathParam("ticket_id");
+        String param = context.pathParam("ticketId");
 
         try {
             int ticketId = Integer.parseInt(param);
@@ -71,7 +95,7 @@ public class TicketController {
     };
 
     public Handler deleteTicketById = context -> {
-        String param = context.pathParam("ticket_id");
+        String param = context.pathParam("ticketId");
 
         try {
             int ticketId = Integer.parseInt(param);

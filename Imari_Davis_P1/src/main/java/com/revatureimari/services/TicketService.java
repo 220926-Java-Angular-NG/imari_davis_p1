@@ -24,6 +24,14 @@ public class TicketService {
         return ticketRepo.getAll();
     }
 
+    public List<Ticket> getAllTicketsByUser(int employeeID) {
+        return ticketRepo.getAllByUser(employeeID);
+    }
+
+    public List<Ticket> getAllPendingTickets() {
+        return ticketRepo.getAllPending();
+    }
+
     public Ticket getTicketById(int ticketId) {
         return ticketRepo.getById(ticketId);
     }

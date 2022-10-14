@@ -2,6 +2,7 @@ package com.revatureimari.repos;
 
 import com.revatureimari.models.Ticket;
 import com.revatureimari.models.TicketStatus;
+import com.revatureimari.models.User;
 import com.revatureimari.utils.CRUDDaoInterface;
 import com.revatureimari.utils.ConnectionManager;
 
@@ -25,13 +26,12 @@ public class TicketRepo implements CRUDDaoInterface<Ticket> {
     @Override
     public int create(Ticket ticket) {
         try {
-            String sql = "INSERT INTO tickets (ticket_id, amount, description, status, employee_id) values (default,?,?,?,?)";
+            String sql = "INSERT INTO tickets (ticket_id, amount, description, employee_id) values (default,?,?,?)";
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setDouble(1, ticket.getAmount());
             preparedStatement.setString(2, ticket.getDescription());
-            preparedStatement.setString(3, ticket.getTicketStatus().toString());
-            preparedStatement.setInt(4, ticket.getEmployeeId());
+            preparedStatement.setInt(3, ticket.getEmployeeId());
 
             preparedStatement.executeUpdate();
 
@@ -54,6 +54,63 @@ public class TicketRepo implements CRUDDaoInterface<Ticket> {
 
         try {
             String sql = "SELECT * FROM tickets";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Ticket ticket = new Ticket();
+                ticket.setTicketId(resultSet.getInt("ticket_id"));
+                ticket.setAmount(resultSet.getDouble("amount"));
+                ticket.setDescription(resultSet.getString("description"));
+                ticket.setTicketStatus(TicketStatus.valueOf(resultSet.getString("status")));
+                ticket.setEmployeeId(resultSet.getInt("employee_id"));
+                tickets.add(ticket);
+            }
+
+            return tickets;
+
+        } catch (SQLException sqlException) {
+            System.out.println(sqlException.getMessage());
+        }
+
+        return null;
+    }
+
+    public List<Ticket> getAllByUser(int employeeID) {
+        List<Ticket> tickets = new ArrayList<Ticket>();
+
+        try {
+            String sql = "SELECT * FROM tickets WHERE employee_id = ? ORDER BY ticket_id";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, employeeID);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Ticket ticket = new Ticket();
+                ticket.setTicketId(resultSet.getInt("ticket_id"));
+                ticket.setAmount(resultSet.getDouble("amount"));
+                ticket.setDescription(resultSet.getString("description"));
+                ticket.setTicketStatus(TicketStatus.valueOf(resultSet.getString("status")));
+                ticket.setEmployeeId(resultSet.getInt("employee_id"));
+                tickets.add(ticket);
+            }
+
+            return tickets;
+
+        } catch (SQLException sqlException) {
+            System.out.println(sqlException.getMessage());
+        }
+
+        return null;
+    }
+
+    public List<Ticket> getAllPending() {
+        List<Ticket> tickets = new ArrayList<Ticket>();
+
+        try {
+            String sql = "SELECT * FROM tickets WHERE status = 'Pending' ORDER BY ticket_id";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
             ResultSet resultSet = preparedStatement.executeQuery();

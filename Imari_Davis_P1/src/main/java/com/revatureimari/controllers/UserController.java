@@ -5,7 +5,8 @@ import com.revatureimari.services.UserService;
 import io.javalin.http.Handler;
 
 public class UserController {
-    UserService userService;
+    private UserService userService;
+    private User currentUser;
 
     public UserController() {
         userService = new UserService();
@@ -16,7 +17,6 @@ public class UserController {
     }
 
     public Handler createNewUser = context -> {
-
         User user = context.bodyAsClass(User.class);
         int userId = userService.createUser(user);
 
@@ -33,7 +33,7 @@ public class UserController {
     };
 
     public Handler getUserById = context -> {
-        String param = context.pathParam("user_id");
+        String param = context.pathParam("userId");
 
         try {
             int userId = Integer.parseInt(param);
@@ -72,7 +72,7 @@ public class UserController {
     };
 
     public Handler deleteUserById = context -> {
-        String param = context.pathParam("user_id");
+        String param = context.pathParam("userId");
 
         try {
             int userId = Integer.parseInt(param);
@@ -83,4 +83,44 @@ public class UserController {
             System.out.println(numberFormatException.getMessage());
         }
     };
+
+    public Handler loginUser = context -> {
+        User user = context.bodyAsClass(User.class);
+
+        try {
+            currentUser = userService.loginUser(user);
+
+            if (currentUser != null) {
+                context.result("Logged in as " + currentUser.getFirstName() + " " + currentUser.getLastName());
+            } else {
+                context.result("Invalid username or password").status(400);
+            }
+
+        } catch (NumberFormatException nfmException) {
+            System.out.println(nfmException.getMessage());
+
+        }
+    };
+
+    public Handler loginUserByEmail = context -> {
+        User user = context.bodyAsClass(User.class);
+
+        try {
+            currentUser = userService.loginUserByEmail(user);
+
+            if (currentUser != null) {
+                context.result("Logged in as " + currentUser.getFirstName() + " " + currentUser.getLastName());
+
+            } else {
+                context.result("Invalid email address or password").status(400);
+            }
+
+        } catch (NumberFormatException nfmException) {
+            System.out.println(nfmException.getMessage());
+
+        }
+
+    };
+
+
 }
